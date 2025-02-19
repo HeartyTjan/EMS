@@ -4,13 +4,15 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
-public class EmployeeRequest {
+public class EmployeeUpdateRequest {
     @Valid
 
     @NotBlank(message = "First name is required")
@@ -25,5 +27,4 @@ public class EmployeeRequest {
     @NotBlank(message = "email name is required")
     @NotNull(message = "email name is required")
     private String email;
-
 }

@@ -1,6 +1,7 @@
 package net.javaguides.ems.mapper;
 
 import net.javaguides.ems.dto.request.EmployeeRequest;
+import net.javaguides.ems.dto.request.EmployeeUpdateRequest;
 import net.javaguides.ems.dto.response.EmployeeResponse;
 import net.javaguides.ems.dto.response.Response;
 import net.javaguides.ems.entity.Employee;
@@ -29,9 +30,19 @@ public class EmployeeMapper  {
         response.setEmployee(employee);
         return response;
     }
+    public static EmployeeUpdateRequest mapToUpdateRequest(Employee employee) {
+        EmployeeUpdateRequest request = new EmployeeUpdateRequest();
+        request.setFirstName(employee.getFirstName());
+        request.setLastName(employee.getLastName());
+        request.setEmail(employee.getEmail());
+        return request;
+    }
     public static Response mapToResponse(String message) {
         Response response = new Response();
         response.setResponse(message);
         return response;
     }
+
+
+
 }

@@ -2,6 +2,7 @@ package net.javaguides.ems.service;
 
 
 import net.javaguides.ems.dto.request.EmployeeRequest;
+import net.javaguides.ems.dto.request.EmployeeUpdateRequest;
 import net.javaguides.ems.dto.response.EmployeeResponse;
 import net.javaguides.ems.dto.response.Response;
 import net.javaguides.ems.entity.Employee;
@@ -31,10 +32,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeRequest getEmployeeById(Long employeeId) {
+    public EmployeeResponse getEmployeeById(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(()-> new ResourceNotFoundException("Employee with id " + employeeId + " not found"));
-           return EmployeeMapper.mapToEmployeeRequest(employee);
+           return EmployeeMapper.mapEmployeeToResponse("successful", employee);
     }
 
     @Override
@@ -45,13 +46,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Response updateEmployee(Long employeeId, EmployeeRequest updatedEmployeeRequest) {
+    public Response updateEmployee(Long employeeId, EmployeeUpdateRequest updateEmployeeRequest) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(()-> new ResourceNotFoundException("Employee with id " + employeeId + " not found"));
 
-        employee.setFirstName(updatedEmployeeRequest.getFirstName());
-        employee.setLastName(updatedEmployeeRequest.getLastName());
-        employee.setEmail(updatedEmployeeRequest.getEmail());
+        employee.setFirstName(updateEmployeeRequest.getFirstName());
+        employee.setLastName(updateEmployeeRequest.getLastName());
+        employee.setEmail(updateEmployeeRequest.getEmail());
         employeeRepository.save(employee);
 //        employeeRepository.delete(employee);
 //        Employee updatedEmployee = EmployeeMapper.mapToEmployee(updatedEmployeeRequest);

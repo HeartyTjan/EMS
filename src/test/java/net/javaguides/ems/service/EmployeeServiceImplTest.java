@@ -1,6 +1,7 @@
 package net.javaguides.ems.service;
 
 import net.javaguides.ems.dto.request.EmployeeRequest;
+import net.javaguides.ems.dto.request.EmployeeUpdateRequest;
 import net.javaguides.ems.dto.response.EmployeeResponse;
 import net.javaguides.ems.dto.response.Response;
 import net.javaguides.ems.entity.Employee;
@@ -52,7 +53,8 @@ class EmployeeServiceImplTest {
         assertEquals(1,employeeRepository.count());
         assertEquals("Employee Created Successfully",response.getResponse());
 
-        EmployeeRequest savedEmployee = employeeService.getEmployeeById(response.getEmployee().getId());
+        EmployeeResponse savedEmployeeResponse = employeeService.getEmployeeById(response.getEmployee().getId());
+        Employee savedEmployee = savedEmployeeResponse.getEmployee();
 
         assertEquals(savedEmployee.getFirstName(),request.getFirstName());
         assertEquals(savedEmployee.getLastName(),request.getLastName());
@@ -92,14 +94,15 @@ class EmployeeServiceImplTest {
         assertEquals(3,employeeRepository.count());
 
         Employee createdEmployee = employeeResponse.getEmployee();
-        EmployeeRequest savedEmployee = employeeService.getEmployeeById(createdEmployee.getId());
-        savedEmployee.setEmail("bensontobi@gmail.com");
+        EmployeeResponse savedEmployee = employeeService.getEmployeeById(createdEmployee.getId());
+        EmployeeUpdateRequest updateRequest = EmployeeMapper.mapToUpdateRequest(savedEmployee.getEmployee());
+        updateRequest.setEmail("bensontobi@gmail.com");
 
-        Response response =  employeeService.updateEmployee(createdEmployee.getId(),savedEmployee);
+        Response response =  employeeService.updateEmployee(createdEmployee.getId(),updateRequest);
         assertEquals("Employee information Updated successfully", response.getResponse());
 
-        EmployeeRequest foundEmployee = employeeService.getEmployeeById(createdEmployee.getId());
-        assertEquals("bensontobi@gmail.com", foundEmployee.getEmail());
+        EmployeeResponse foundEmployee = employeeService.getEmployeeById(createdEmployee.getId());
+        assertEquals("bensontobi@gmail.com", foundEmployee.getEmployee().getEmail());
 
         assertEquals(3,employeeRepository.count());
 

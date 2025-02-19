@@ -2,10 +2,11 @@ package net.javaguides.ems.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import net.javaguides.ems.dto.request.EmployeeRequest;
+import net.javaguides.ems.dto.request.EmployeeUpdateRequest;
 import net.javaguides.ems.dto.response.EmployeeResponse;
 import net.javaguides.ems.dto.response.Response;
-import net.javaguides.ems.exception.EmployeeAlreadyExistException;
 import net.javaguides.ems.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,28 +20,21 @@ import java.util.List;
 @Tag(name = "Employee Controller", description = "Endpoints for managing employees")
 
 public class EmployeeController {
-
     @Autowired
     private EmployeeService employeeService;
 
     @PostMapping
     @Operation(summary = "Create a new employee", description = "Adds a new employee to the database")
-    public ResponseEntity<EmployeeResponse> createEmployee(@RequestBody EmployeeRequest employeeRequest) {
-        try {
-            EmployeeResponse response = employeeService.createEmployee(employeeRequest);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (EmployeeAlreadyExistException e) {
-            EmployeeResponse response = new EmployeeResponse();
-            response.setResponse(e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.CONFLICT);
-        }
+    public ResponseEntity<EmployeeResponse> createEmployee(@Valid @RequestBody EmployeeRequest employeeRequest) {
+        EmployeeResponse response = employeeService.createEmployee(employeeRequest);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("{id}")
     @Operation(summary = "Get employee by ID", description = "Fetch an employee by their ID")
-    public ResponseEntity<EmployeeRequest> getEmployeeById(@PathVariable("id") Long employeeId) {
-        EmployeeRequest employeeRequest = employeeService.getEmployeeById(employeeId);
-        return ResponseEntity.ok(employeeRequest);
+    public ResponseEntity<EmployeeResponse> getEmployeeById(@PathVariable("id") Long employeeId) {
+        EmployeeResponse employeeResponse = employeeService.getEmployeeById(employeeId);
+        return ResponseEntity.ok(employeeResponse);
     }
 
     @GetMapping
@@ -49,12 +43,11 @@ public class EmployeeController {
         List<EmployeeRequest> employeeRequests = employeeService.getAllEmployees();
         return ResponseEntity.ok(employeeRequests);
     }
-
     @PutMapping("{id}")
     @Operation(summary = "Update an employee", description = "Modifies an existing employee's details")
     public ResponseEntity<Response> updateEmployee(@PathVariable("id") Long employeeId,
-                                                           @RequestBody EmployeeRequest employeeRequest) {
-        Response response = employeeService.updateEmployee(employeeId, employeeRequest);
+                                                   @Valid @RequestBody EmployeeUpdateRequest updateRequest) {
+        Response response = employeeService.updateEmployee(employeeId, updateRequest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -73,3 +66,8 @@ public class EmployeeController {
     }
 
 }
+
+
+
+
+
